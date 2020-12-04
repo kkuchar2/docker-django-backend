@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'klkucharski.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'klkucharski-api.com']
 
 CORS_ORIGIN_ALLOW_ALL = False
 

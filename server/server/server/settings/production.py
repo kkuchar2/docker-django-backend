@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = [envv('DOMAIN')]
+ALLOWED_HOSTS = ['klkucharski-api.com']
 
 CACHES = {
     'default': {
