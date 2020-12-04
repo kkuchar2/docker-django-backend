@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  klkuch_db:
+    image: mysql:5.7
+    container_name: klkuch_db_container
+    hostname: klkuch_db_hos
+    command: "--explicit_defaults_for_timestamp=1"
+    ports:
+      - 3307:3306
+    volumes:
+      - ./db-volumes/mysql-data:/var/lib/mysql
+      - ./db-volumes/mysql-log:/var/log/mysql
+      - ./db-volumes/mysql-conf:/etc/mysql/conf.d
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD?Env variable error}
+      - MYSQL_USER=${MYSQL_USER?Env variable error}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD-root?Env variable error}
+      - MYSQL_DATABASE=${MYSQL_DATABASE-klkuch_db?Env variable error}
+    networks:
+      - webapp_network
+
+  klkuch_server:
+    image: klkuch_server:latest
+    container_name: klkuch_server_container
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - ./server:/code
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SECRET_KEY=${DJANGO_SECRET?Env variable error}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD?Env variable error}
+      - MYSQL_USER=${MYSQL_USER?Env variable error}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD-root?Env variable error}
+      - MYSQL_DATABASE=${MYSQL_DATABASE-klkuch_db?Env variable error}
+    depends_on:
+      - klkuch_db
+    working_dir: /
+    command: /klkuch_server_code/fire_up_server.sh
+    networks:
+      - webapp_network
+
+networks:
+  webapp_network:
+    driver: bridge
