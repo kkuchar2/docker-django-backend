@@ -88,9 +88,10 @@ USE_L10N = True
 USE_TZ = True
 
 # Static files
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+SETTINGS_ROOT = os.path.dirname(os.path.abspath(__file__))
+SERVER_APP_ROOT = os.path.join(SETTINGS_ROOT, '..')
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+STATIC_ROOT = os.path.join(SERVER_APP_ROOT, '..', 'static')
 
 ROOT_URLCONF = 'server.urls'
 

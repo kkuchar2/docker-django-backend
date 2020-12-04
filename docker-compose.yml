@@ -18,8 +18,6 @@ services:
       - MYSQL_USER=${MYSQL_USER?Env variable error}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD-root?Env variable error}
       - MYSQL_DATABASE=${MYSQL_DATABASE-klkuch_db?Env variable error}
-    networks:
-      - webapp_network
 
   klkuch_server:
     image: klkuch_server:latest
@@ -43,9 +41,3 @@ services:
       - klkuch_db
     working_dir: /
     command: /klkuch_server_code/fire_up_server.sh
-    networks:
-      - webapp_network
-
-networks:
-  webapp_network:
-    driver: bridge
