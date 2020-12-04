@@ -23,4 +23,4 @@ set_variable "PYTHON_BUFFERED" 1
 printf "..................................................................................\n"
 printf "\n"
 
-docker-compose up
+docker-compose up -d
