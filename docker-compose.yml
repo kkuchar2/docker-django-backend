@@ -8,7 +8,7 @@ services:
   db:
     image: mysql:5.7
     container_name: db_container
-    command: "--explicit_defaults_for_timestamp=1"
+    command: [mysqld, --max-connections=1000, --wait_timeout=28800, --log-warnings=0]
     ports:
       - 3307:3306
     volumes:
