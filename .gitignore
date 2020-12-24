@@ -1,2 +1,5 @@
-.idea
-db-volumes
+redis
+venv
+project/server/static
+__pycache__/
+ *.pyc

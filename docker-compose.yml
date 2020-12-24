@@ -1,43 +1,102 @@
 version: '3'
 
 services:
-  klkuch_db:
+
+  #
+  # MySQL Database
+  #
+  db:
     image: mysql:5.7
-    container_name: klkuch_db_container
-    hostname: klkuch_db_hos
+    container_name: db_container
     command: "--explicit_defaults_for_timestamp=1"
     ports:
       - 3307:3306
     volumes:
-      - ./db-volumes/mysql-data:/var/lib/mysql
-      - ./db-volumes/mysql-log:/var/log/mysql
-      - ./db-volumes/mysql-conf:/etc/mysql/conf.d
-    restart: always
+      - ./mysql/persistence/mysql-data:/var/lib/mysql # Persistent data
+      - ./mysql/persistence/mysql-log:/var/log/mysql # Persistent logs
+      - ./mysql/persistence/mysql-conf:/etc/mysql/conf.d # Persistent configuration
+      - ./mysql/scripts/my.cnf:/etc/mysql/my.cnf # Persistent scripts
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD?Env variable error}
-      - MYSQL_USER=${MYSQL_USER?Env variable error}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD-root?Env variable error}
-      - MYSQL_DATABASE=${MYSQL_DATABASE-klkuch_db?Env variable error}
-
-  klkuch_server:
-    image: klkuch_server:latest
-    container_name: klkuch_server_container
+      - MYSQL_USER=${MYSQL_USER-root?Env variable error}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD?Env variable error}
+      - MYSQL_DATABASE=${MYSQL_DATABASE-db?Env variable error}
     restart: always
-    build:
-      context: ./server
-      dockerfile: Dockerfile
+
+  #
+  # Redis in-memory database as the message queue for Celery messages
+  #
+  redis:
+    image: redis
+    container_name: redis_container
     ports:
-      - 5000:5000
+      - 6380:6379
     volumes:
-      - ./server:/code
+      - ./redis/data:/data
+    restart: always
+
+  #
+  # Base API service
+  #
+  api:
+    container_name: api_container
+    volumes:
+      - ./dependencies:/backend/dependencies
+      - ./project:/backend/project
+      - ./scripts/deployment:/backend/scripts
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       - PYTHONUNBUFFERED=1
-      - SECRET_KEY=${DJANGO_SECRET?Env variable error}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD?Env variable error}
-      - MYSQL_USER=${MYSQL_USER?Env variable error}
+      - SECRET_KEY=${SECRET_KEY?Env variable error}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD-root?Env variable error}
+      - MYSQL_USER=${MYSQL_USER-root?Env variable error}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD-root?Env variable error}
-      - MYSQL_DATABASE=${MYSQL_DATABASE-klkuch_db?Env variable error}
+      - MYSQL_DATABASE=${MYSQL_DATABASE-db?Env variable error}
+      - PRODUCTION_ENV=${PRODUCTION_ENV?Env variable error}
+      - DOCKER_DB=${DOCKER_DB?Env variable error}
+
+  #
+  # Celery worker for executing tasks
+  #
+  celery-worker:
+    container_name: celery_worker_container
+    extends:
+      service: api
+    command: ./scripts/start_celery_worker.sh
     depends_on:
-      - klkuch_db
-    working_dir: /
-    command: /klkuch_server_code/fire_up_server.sh
+      - db
+      - redis
+
+  #
+  # Celery worker for schedulting tasks for Celery worker
+  #
+  celery-beat:
+    container_name: celery_beat_container
+    extends:
+      service: api
+    command: ./scripts/start_celery_beat.sh
+    depends_on:
+      - db
+      - redis
+      - celery-worker
+
+  #
+  # Main Django backend
+  #
+  django:
+    image: django:latest
+    container_name: django_container
+    extends:
+      service: api
+    command: ./scripts/fire_up_server.sh
+    ports:
+      - 5000:5000
+    restart: always
+    depends_on:
+      - db
+      - redis
+      - celery-worker
+      - celery-beat
+

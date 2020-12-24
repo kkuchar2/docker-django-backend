@@ -2,4 +2,4 @@
 
 . set_environment_variables.sh
 
-docker-compose up
+docker-compose up --build -d
