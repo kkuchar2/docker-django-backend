@@ -5,7 +5,8 @@ from util import envv
 
 PRODUCTION_ENV = envv('PRODUCTION_ENV')
 
-DEBUG = PRODUCTION_ENV == 'False'
+# Keep in mind, that static files on DEBUG=False won't be served by Django!
+DEBUG = True
 
 # True - uses database in Docker
 DOCKER_DB = envv('DOCKER_DB') == 'True'
@@ -85,10 +86,15 @@ USE_L10N = True
 USE_TZ = True
 
 # Static files
-SETTINGS_ROOT = os.path.dirname(os.path.abspath(__file__))
-SERVER_APP_ROOT = os.path.join(SETTINGS_ROOT, '../server')
+SETTINGS_ROOT = os.path.dirname(os.path.abspath(__file__))  # Path to this directory
+PROJECT_ROOT = os.path.abspath(os.path.join(SETTINGS_ROOT, '../'))  # Project directory
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(SERVER_APP_ROOT, '', 'static')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, '', 'static')
+
+print("SETTINGS_ROOT: {}".format(SETTINGS_ROOT))
+print("PROJECT_ROOT: {}".format(PROJECT_ROOT))
+print("STATIC_URL: {}".format(STATIC_URL))
+print("STATIC_ROOT: {}".format(STATIC_ROOT))
 
 # Urls
 ROOT_URLCONF = 'urls'
