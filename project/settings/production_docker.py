@@ -1,7 +1,6 @@
-from settings.constants import DOMAIN
 from util import envv
 
-ALLOWED_HOSTS = [DOMAIN]
+ALLOWED_HOSTS = ["*"]
 
 DATABASES = {
     'default': {
