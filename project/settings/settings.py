@@ -86,7 +86,7 @@ USE_TZ = True
 
 # Static files
 SETTINGS_ROOT = os.path.dirname(os.path.abspath(__file__))
-SERVER_APP_ROOT = os.path.join(SETTINGS_ROOT, '../applications/../server')
+SERVER_APP_ROOT = os.path.join(SETTINGS_ROOT, '../server')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(SERVER_APP_ROOT, '', 'static')
 
