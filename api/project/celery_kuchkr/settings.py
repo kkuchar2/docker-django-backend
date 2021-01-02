@@ -1,6 +1,6 @@
 from celery.schedules import timedelta
 
-from api.project.util import envv
+from util import envv
 
 SECRET_KEY = envv('SECRET_KEY')
 

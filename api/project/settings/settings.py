@@ -1,4 +1,4 @@
-from api.project.util import envv
+from util import envv
 
 PRODUCTION_ENV = envv('PRODUCTION_ENV')
 
