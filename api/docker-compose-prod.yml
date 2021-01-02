@@ -49,7 +49,7 @@ services:
     container_name: django_container
     extends:
       service: api
-    command: ./scripts/fire_up_server.sh
+    command: ./scripts/start_server.sh
     ports:
       - 5000:5000
     restart: always

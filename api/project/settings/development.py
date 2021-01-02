@@ -11,11 +11,11 @@ Development database will be always local Docker one created by ./start_developm
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_db',
+        'NAME': 'backend_db',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': '138.68.84.160',
-        'PORT': 3307,
+        'HOST': 'localhost',
+        'PORT': 3306,
     }
 }
 
