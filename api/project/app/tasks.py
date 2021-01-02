@@ -24,7 +24,8 @@
 #         return dt, today_cases
 #
 #
-from api.project.celery_kuchkr.mycelery import app
+
+from celery_kuchkr.mycelery import app
 
 
 @app.task
