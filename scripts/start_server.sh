@@ -14,8 +14,8 @@ python manage.py makemigrations celery_kuchkr
 echo "manage.py migrate --noinput"
 python manage.py migrate --noinput
 
-echo "manage.py collectstatic --noinput  --clear"
-python manage.py collectstatic --noinput  --clear
+echo "manage.py collectstatic --noinput"
+python manage.py collectstatic --noinput
 
 echo "Creating adminitrator account"
 python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin@example.com').delete(); User.objects.create_superuser('admin@example.com', 'admin', 'admin')" \
