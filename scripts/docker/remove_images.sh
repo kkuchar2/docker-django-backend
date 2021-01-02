@@ -41,7 +41,7 @@ for image_id in $images; do
     containers=$(docker ps -a | awk '{ print $1,$2 }' | grep $image_id)
     
     if [ "$containers" == "" ]; then
-        docker rmi $image_id
+        docker rmi -f $image_id
         continue
     else
         echo "Used by containers:"
