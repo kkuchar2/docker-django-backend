@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+
+  api:
+    container_name: api_container
+    volumes:
+      - ./project:/backend/project
+    build:
+      context: ..
+      dockerfile: api/Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SECRET_KEY=${SECRET_KEY?Missing SECRET_KEY}
+      - PRODUCTION_ENV=False
+
+  redis:
+    image: redis
+    container_name: redis_container
+    ports:
+      - 6380:6379
+    restart: always
+
+  celery-worker:
+    container_name: celery_worker_container
+    extends:
+      service: api
+    command: ./scripts/start_celery_worker.sh
+    depends_on:
+      - redis
+
+  celery-beat:
+    container_name: celery_beat_container
+    extends:
+      service: api
+    command: ./scripts/start_celery_beat.sh
+    depends_on:
+      - redis
+      - celery-worker
+
+  django:
+    image: django:latest
+    container_name: django_container
+    extends:
+      service: api
+    command: ./scripts/fire_up_server.sh
+    ports:
+      - 5000:5000
+    restart: always
+    depends_on:
+      - redis
+      - celery-worker
+      - celery-beat

@@ -1,1 +1,0 @@
-DOMAIN = 'klkucharski-api.com'
