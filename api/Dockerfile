@@ -8,3 +8,5 @@ COPY api/requirements.txt /backend
 COPY scripts /backend/scripts
 
 WORKDIR backend
+
+RUN pip install --quiet dependencies/*
