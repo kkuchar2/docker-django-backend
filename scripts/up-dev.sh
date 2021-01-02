@@ -1,5 +1,5 @@
 #!/bin/bash
 
-./unlock_db_volume.sh
+./unlock_api_persistence.sh
 
 docker-compose -f ../api/docker-compose-dev.yml up --build

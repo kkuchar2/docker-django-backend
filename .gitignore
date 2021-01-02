@@ -1,5 +1,6 @@
 redis
 venv
 project/static
+persistence
 __pycache__/
  *.pyc

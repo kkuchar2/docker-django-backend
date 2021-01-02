@@ -2,6 +2,9 @@
 
 cd project
 
+echo "Installing dependencies"
+pip install --quiet ../dependencies/*
+
 echo "python manage.py makemigrations --no-input"
 python manage.py makemigrations --no-input
 
