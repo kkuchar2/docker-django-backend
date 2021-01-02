@@ -24,12 +24,12 @@
 #         return dt, today_cases
 #
 #
-# @celery_app.task
-# def fetch_covid(a, b):
-#     print("Fetching covid data...")
-#     date, count = CovidDataFetcher.fetch_data()
-#     COVID.objects.update_or_create(date=date, count=count)
-#     print("Saved to db")
-#
-#
-# fetch_covid(0, 0)
+from api.project.celery_kuchkr.mycelery import app
+
+
+@app.task
+def dummy_task(a, b):
+    print("Dummy periodic task: (a: {}, b: {})".format(a, b))
+
+
+dummy_task(0, 0)

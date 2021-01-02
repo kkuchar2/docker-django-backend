@@ -1,8 +1,10 @@
-from util import envv
+from api.project.util import envv
 
 """
 Host permissions
 """
+
+
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = ['https://klkucharski.com']
