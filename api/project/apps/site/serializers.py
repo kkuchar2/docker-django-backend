@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from app.models import *
+from apps.site.models import *
 
 
 class CovidStatsSerializer(serializers.HyperlinkedModelSerializer):

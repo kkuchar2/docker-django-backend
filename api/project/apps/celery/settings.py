@@ -13,7 +13,7 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_STORE_ERRORS_EVEN_IF_IGNORED = True
 CELERY_BEAT_SCHEDULE = {
     "runs-every-1-hour": {
-        "task": "app.tasks.dummy_task",
+        "task": "site.tasks.dummy_task",
         "schedule": timedelta(hours=1),
         "args": (16, 16)
     }

@@ -7,8 +7,8 @@ DEBUG = PRODUCTION_ENV == 'False'
 SECRET_KEY = envv('SECRET_KEY')
 
 INSTALLED_APPS = [
-    'celery_kuchkr',
-    'app',
+    'apps.site',
+    'apps.celery',
     'rest_framework',
     'corsheaders',
     'django.contrib.admin',

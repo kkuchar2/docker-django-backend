@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 
-from app.serializers import *
+from apps.site.serializers import *
 
 
 class CovidStatsViewSet(viewsets.ModelViewSet):
