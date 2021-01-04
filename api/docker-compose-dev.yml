@@ -13,6 +13,7 @@ services:
       - MYSQL_PASSWORD=root
       - MYSQL_DATABASE=backend_db
     restart: always
+
   api:
     container_name: api_container
     volumes:
