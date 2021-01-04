@@ -24,5 +24,5 @@ class CovidCalcsSerializer(serializers.HyperlinkedModelSerializer):
             'cases_daily_increase',
             'cases_cumulative_increase',
             'deaths_daily_increase',
-            'recoveries_daily_increase'
+            'deaths_cumulative_increase'
         ]

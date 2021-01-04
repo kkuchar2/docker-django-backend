@@ -28,7 +28,6 @@ class CovidStats(models.Model):
 
 
 class CovidCalcs(models.Model):
-
     cases_daily_increase = simple_decimal_field(0.00)
     cases_cumulative_increase = simple_decimal_field(0.00)
     deaths_daily_increase = simple_decimal_field(0.00)
