@@ -12,7 +12,7 @@ task_serializer = 'json'
 timezone = 'UTC'
 beat_schedule = {
     "runs-every-1-hour": {
-        "task": "site.tasks.dummy_task",
+        "task": "covid.tasks.dummy_task",
         "schedule": timedelta(hours=1),
         "args": (16, 16)
     }
