@@ -49,7 +49,7 @@ MIDDLEWARE = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(PROJECT_ROOT, 'apps', 'accounts', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,7 +77,11 @@ AUTH_USER_MODEL = "accounts.User"
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-    ]
+        'rest_framework.permissions.IsAuthenticated'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -87,12 +91,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'apps.accounts.serializers.RegisterSerializer'
-}
-
 REST_AUTH_SERIALIZERS = {
-    'LOGIN_SERIALIZER': 'apps.accounts.serializers.LoginSerializer'
+    'REGISTER_SERIALIZER': 'apps.accounts.serializers.RegisterSerializer',
+    'LOGIN_SERIALIZER': 'apps.accounts.serializers.LoginSerializer',
+    'PASSWORD_RESET_SERIALIZER': 'apps.accounts.serializers.PasswordResetSerializer'
 }
 
 ACCOUNT_ADAPTER = 'apps.accounts.adapter.AccountAdapter'
@@ -105,12 +107,18 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_LOGOUT_ON_GET = False
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
 
 ROOT_URLCONF = 'urls'
 ASGI_APPLICATION = 'asgi.application'

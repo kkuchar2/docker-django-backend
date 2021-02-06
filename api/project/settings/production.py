@@ -1,10 +1,11 @@
 from util import envv
 
+URL_FRONT = 'https://klkucharski.com/'
+
+
 """
 Host permissions
 """
-
-
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = ['https://klkucharski.com']

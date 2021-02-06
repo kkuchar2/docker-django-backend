@@ -1,8 +1,12 @@
 import os
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['0.0.0.0']
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080", "http://127.0.0.1:8080", "http://0.0.0.0:5000"
+]
+
+URL_FRONT = 'http://localhost:8080/'
 
 """
 Development database will be always local Docker one created by ./start_development_database.sh
@@ -40,3 +44,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'klkucharskidevtest@gmail.com'
 EMAIL_HOST_PASSWORD = 'dizswgdbbecutpdb'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+CORS_ALLOW_CREDENTIALS = True
+
+APPEND_SLASH=False
