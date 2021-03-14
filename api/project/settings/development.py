@@ -9,10 +9,6 @@ CORS_ALLOWED_ORIGINS = [
 
 URL_FRONT = 'http://localhost:8080/'
 
-"""
-Development database will be always local Docker one created by ./start_development_database.sh
-"""
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
