@@ -1,5 +1,4 @@
 .idea
-redis
 venv
 project/static
 persistence

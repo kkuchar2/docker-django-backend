@@ -30,11 +30,6 @@ for image_id in $images; do
         continue
     fi
 
-    if [ "$image_name" = "redis" ]; then
-        echo "Skipping redis image and not removing any containers associated with it"
-        continue
-    fi
-
     echo "Image: $image_name id: $image_id"
     
     # Find containers using image

@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  api:
+    container_name: api_container
+    build:
+      context: ""
+      dockerfile: Dockerfile
+    environment:
+      - SECRET_KEY=${SECRET_KEY?Missing SECRET_KEY}
+      - MASTER_EMAIL=${MASTER_EMAIL?Missing MASTER_EMAIL}
+      - MASTER_PASSWORD=${MASTER_PASSWORD?Missing MASTER_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE?Missing MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER?Missing MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD?Missing MYSQL_PASSWORD}
+      - MYSQL_HOST=${MYSQL_HOST?Missing MYSQL_HOST}
+      - MYSQL_PORT=${MYSQL_PORT?Missing MYSQL_PORT}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID?Missing AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY?Missing AWS_SECRET_ACCESS_KEY}
+      - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME?Missing AWS_STORAGE_BUCKET_NAME}
+      - AWS_S3_ENDPOINT_URL=${AWS_S3_ENDPOINT_URL?Missing AWS_S3_ENDPOINT_URL}
+      - AWS_S3_CUSTOM_DOMAIN=${AWS_S3_CUSTOM_DOMAIN?Missing AWS_S3_CUSTOM_DOMAIN}
+      - AWS_LOCATION=${AWS_LOCATION?Missing AWS_LOCATION}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER?Missing EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD?MIssing EMAIL_HOST_PASSWORD}
+      - PYTHONUNBUFFERED=1
+      - PRODUCTION_ENV=True
+  django:
+    image: django:latest
+    container_name: django_container
+    extends:
+      service: api
+    command: ./scripts/start_server.sh
+    ports:
+      - 5000:5000
+    restart: always

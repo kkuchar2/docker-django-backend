@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: db_container
+    command: [mysqld, --max-connections=1000, --wait_timeout=28800]
+    volumes:
+      - ./persistence/mysql:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=dev
+      - MYSQL_PASSWORD=dev
+      - MYSQL_DATABASE=backend_db
+    restart: always
+
+  api:
+    container_name: api_container
+    volumes:
+      - ./project:/backend/project
+    build:
+      context: ""
+      dockerfile: Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SECRET_KEY=${SECRET_KEY?Missing SECRET_KEY}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD?Missing EMAIL_HOST_PASSWORD}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER?Missing EMAIL_HOST_USER}
+      - MASTER_EMAIL=${MASTER_EMAIL?Missing MASTER_EMAIL}
+      - MASTER_PASSWORD=${MASTER_PASSWORD?Missing MASTER_PASSWORD}
+      - PRODUCTION_ENV=False
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=dev
+      - MYSQL_PASSWORD=dev
+      - MYSQL_DATABASE=backend_db
+  django:
+    image: django:latest
+    container_name: django_container
+    extends:
+      service: api
+    command: ./scripts/fire_up_server_dev.sh
+    ports:
+      - "8000:8000"
+    restart: always
+    depends_on:
+      - db
