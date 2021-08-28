@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Deploy new version of server
-        uses: appleboy/ssh-action@v0.1.2
+        uses: appleboy/ssh-action@v0.1.4
         with:
           host: ${{secrets.SSH_HOST}}
           key: ${{secrets.SSH_KEY}}
