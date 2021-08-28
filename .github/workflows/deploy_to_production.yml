@@ -20,6 +20,5 @@ jobs:
           
           script: |
             cd docker-django-backend
-            ls -la
             git pull origin main
-            ./up-dev.sh
+            ./up-prod.sh
