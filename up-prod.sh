@@ -36,7 +36,7 @@ unlock_api_persistence
 stop_container django_container
 
 echo
-echo "docker-compose --env-file $CONFIG_FILE --file $COMPOSE_FILE up --build"
+echo "docker-compose --env-file $CONFIG_FILE --file $COMPOSE_FILE up --build --detach"
 echo
 
-docker-compose --env-file "$CONFIG_FILE" --file "$COMPOSE_FILE" up --build
+docker-compose --env-file "$CONFIG_FILE" --file "$COMPOSE_FILE" up --build --detach
