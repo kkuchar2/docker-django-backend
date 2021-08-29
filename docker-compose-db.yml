@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: db_container
+    command: [mysqld, --max-connections=1000, --wait_timeout=28800]
+    volumes:
+      - ./persistence/mysql:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=dev
+      - MYSQL_PASSWORD=dev
+      - MYSQL_DATABASE=backend_db
+    restart: always

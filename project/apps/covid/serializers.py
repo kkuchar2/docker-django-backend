@@ -27,6 +27,7 @@ class CovidCalcsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CovidCalcs
         fields = [
+            'id',
             'cases_daily_increase',
             'cases_cumulative_increase',
             'deaths_daily_increase',

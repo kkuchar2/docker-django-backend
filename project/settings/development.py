@@ -17,11 +17,11 @@ Database for development is local Docker database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': envv('MYSQL_DATABASE'),
-        'USER': envv('MYSQL_USER'),
-        'PASSWORD': envv('MYSQL_PASSWORD'),
-        'HOST': envv('MYSQL_HOST'),
-        'PORT': envv('MYSQL_PORT'),
+        'NAME': 'backend_db',
+        'USER': 'dev',
+        'PASSWORD': 'dev',
+        'HOST': '127.0.0.1',
+        'PORT': 3307,
     }
 }
 

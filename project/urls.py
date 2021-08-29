@@ -11,6 +11,7 @@ from apps.accounts.views import ConfirmEmailView, RegisterView, LoginView, AutoL
 from apps.crud.views import ListModelsView
 from apps.crud.views.get_model import GetModelView
 from apps.crud.views.update_model import UpdateModelView
+from apps.crud.views.add_item import AddItemView
 
 router = routers.DefaultRouter()
 
@@ -29,6 +30,7 @@ urlpatterns = [
     path('api/listModels', ListModelsView.as_view()),
     path('api/getModel', GetModelView.as_view()),
     path('api/updateModel', UpdateModelView.as_view()),
+    path('api/addItem', AddItemView.as_view()),
     url(r'^accounts/', include('allauth.urls'), name='socialaccount_signup')
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
