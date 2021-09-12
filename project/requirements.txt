@@ -10,6 +10,8 @@ django-storages==1.11.1
 django-grappelli==2.15.1
 djangorestframework==3.12.4
 djangorestframework-simplejwt==4.7.2
+google-auth==2.0.2
+google-cloud-storage==1.42.1
 pillow==8.3.1
 dj-rest-auth==2.1.9
 gunicorn==20.1.0
