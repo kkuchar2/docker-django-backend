@@ -38,8 +38,8 @@ GS_BUCKET_NAME = envv('GS_BUCKET_NAME')
 STATICFILES_STORAGE = 'custom_storages.GoogleCloudStaticStorage'
 DEFAULT_FILE_STORAGE = 'custom_storages.GoogleCloudMediaStorage'
 
-STATIC_URL = 'https://storage.cloud.google.com/{}/{}/'.format(GS_BUCKET_NAME, 'static')
+STATIC_URL = 'https://storage.googleapis.com/{}/{}/'.format(GS_BUCKET_NAME, 'static')
 STATIC_ROOT = 'static/'
 
-MEDIA_URL = 'https://storage.cloud.google.com/{}/{}/'.format(GS_BUCKET_NAME, 'media')
+MEDIA_URL = 'https://storage.googleapis.com/{}/{}/'.format(GS_BUCKET_NAME, 'media')
 MEDIA_ROOT = 'media/'
