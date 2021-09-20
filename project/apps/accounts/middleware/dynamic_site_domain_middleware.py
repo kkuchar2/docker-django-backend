@@ -20,8 +20,6 @@ class DynamicSiteDomainMiddleware:
             except Site.DoesNotExist:
                 pass
 
-        print(current_site)
-
         if current_site is not None:
             request.current_site = current_site
             settings.SITE_ID = current_site.id

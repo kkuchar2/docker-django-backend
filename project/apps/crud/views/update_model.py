@@ -19,14 +19,12 @@ class UpdateModelView(APIView):
 
             fields.pop('id', None)
 
-            print(fields)
-
             model_class.objects.filter(pk=row_id).update(**fields)
 
-            print(model_class)
-
             return JsonResponse({'status': 'success', 'data': {
-                'updated_id': row_id
+                'package': data['package'],
+                'model': model,
+                'updated_ids': [row_id]
             }})
 
         return JsonResponse({'status': 'error', 'data': 'unauthenticated'})

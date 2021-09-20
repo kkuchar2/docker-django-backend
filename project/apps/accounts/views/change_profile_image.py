@@ -14,14 +14,11 @@ class ChangeProfileImageView(GenericAPIView):
 
     def post(self, *args, **kwargs):
 
-        print(self.request)
-
         if self.request.user.is_authenticated:
 
             try:
                 user = user_model.objects.get(email=self.request.user.email)
             except Exception as e:
-                print("DOES NOT EXIST")
                 return JsonResponse({'status': 'error', 'data': 'User does not exist'})
 
             if 'img' in self.request.FILES:
@@ -31,27 +28,14 @@ class ChangeProfileImageView(GenericAPIView):
                 return JsonResponse({
                     'status': 'success',
                     'data': {
-                        'user': {
-                            'email': self.request.user.email,
-                            'is_staff': self.request.user.is_staff,
-                            'avatar' : s.get_avatar_url(self.request, user)
-                        },
+                        'avatar': s.get_avatar_url(self.request, user)
                     }
+
                 })
 
-            # update_user_form = UserProfileForm(data=self.request.FILES, instance=user)
-            #
-            # if update_user_form.is_valid():
-            #     update_user_form.save()
-
             return JsonResponse({
-                'status': 'success',
-                'data': {
-                    'user': {
-                        'email': self.request.user.email,
-                        'is_staff': self.request.user.is_staff
-                    },
-                }
+                'status': 'error',
+                'data': 'No image sent in request'
             })
         else:
             return JsonResponse({'status': 'error', 'data': 'Not authenticated'})

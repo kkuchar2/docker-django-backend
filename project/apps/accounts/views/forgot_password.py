@@ -5,6 +5,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework import serializers
 
+from apps.accounts.serializers import ForgotPasswordSerializer
 from apps.accounts.util import parse_field_errors
 
 
@@ -16,7 +17,7 @@ class ForgotPasswordView(GenericAPIView):
     Accepts the following POST parameters: email
     Returns the success/fail message.
     """
-    serializer_class = PasswordResetSerializer
+    serializer_class = ForgotPasswordSerializer
     permission_classes = (AllowAny,)
     throttle_scope = 'dj_rest_auth'
 
