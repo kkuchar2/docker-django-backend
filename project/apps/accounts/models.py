@@ -24,8 +24,6 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='email address', unique=True, null=False, blank=False, db_index=True)
     avatar = models.ImageField(upload_to='images', null=False, default='static/default_avatar.png')
-
-    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
     objects = UserManager()

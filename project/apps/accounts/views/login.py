@@ -91,13 +91,13 @@ class LoginView(GenericAPIView):
             refresh_token_expiration = (timezone.now() + jwt_settings.REFRESH_TOKEN_LIFETIME)
             return_expiration_times = getattr(settings, 'JWT_AUTH_RETURN_EXPIRATION', False)
 
-            s = AvatarSerializer()
+            avatar_serializer = AvatarSerializer()
 
             data = {
                 'user': {
                     'email': self.user.email,
                     'is_staff': self.user.is_staff,
-                    'avatar': s.get_avatar_url(self.request, self.user)
+                    'avatar': avatar_serializer.get_avatar_url(self.request, self.user)
                 },
                 'access_token': self.access_token,
                 'refresh_token': self.refresh_token

@@ -55,28 +55,25 @@ class GetModelView(APIView):
             'rows': serializer.data
         }
 
-    def process_range_query(self, model, serializer, start_idx, end_idx):
-        obj = model.objects.filter(pk__lte=end_idx, pk__gte=start_idx)
+    def process(self, model, serializer, obj):
         sr = serializer(obj, many=True)
         header_fields = self.create_headers_dict(model, serializer)
         return JsonResponse({'status': 'success', 'data': self.build_response(header_fields, sr)})
+
+    def process_range_query(self, model, serializer, start_idx, end_idx):
+        return self.process(model, serializer, model.objects.filter(pk__lte=end_idx, pk__gte=start_idx))
 
     def process_single_item_query(self, model, serializer, idx):
-        obj = model.objects.filter(pk__lte=idx, pk__gte=idx)
-        sr = serializer(obj, many=True)
-        header_fields = self.create_headers_dict(model, serializer)
-        return JsonResponse({'status': 'success', 'data': self.build_response(header_fields, sr)})
+        return self.process(model, serializer, model.objects.filter(pk__lte=idx, pk__gte=idx))
+
+    def process_multi_item_query(self, model, serializer, indices):
+        return self.process(model, serializer, model.objects.filter(id__in=indices))
 
     def process_all_data_query(self, model, serializer):
-        obj = model.objects.all()
-        sr = serializer(obj, many=True)
-        header_fields = self.create_headers_dict(model, serializer)
-        return JsonResponse({'status': 'success', 'data': self.build_response(header_fields, sr)})
+        return self.process(model, serializer, model.objects.all())
 
     def post(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            print(self.request.data)
-
             data = self.request.data
 
             if 'model' not in data or 'package' not in data:
@@ -84,10 +81,11 @@ class GetModelView(APIView):
 
             app_model, serializer = self.get_model_and_serializer(data)
 
-            print(serializer)
-
             if 'startIdx' in data and 'endIdx' in data:
                 return self.process_range_query(app_model, serializer, data['startIdx'], data['endIdx'])
+
+            if 'indices' in data and data['indices'] is not None:
+                return self.process_multi_item_query(app_model, serializer, data['indices'])
 
             if 'idx' in data and data['idx'] is not None:
                 return self.process_single_item_query(app_model, serializer, data['idx'])

@@ -25,11 +25,6 @@ class ListModelsView(APIView):
                 if full_package_name in AVAILABLE_MODELS:
                     target_models.append({'package': package, 'model': simple_name})
 
-            print('Models to expose:')
-
-            for model in target_models:
-                print(model)
-
             return JsonResponse({'status': 'success', 'data': target_models})
 
         return JsonResponse({'status': 'error', 'data': 'Not authenticated'})

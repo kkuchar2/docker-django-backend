@@ -8,7 +8,7 @@ def simple_integer_field(default_value):
 
 
 def simple_decimal_field(default_value):
-    return models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=2, default=default_value)
+    return models.DecimalField(null=True, blank=True, max_digits=9, decimal_places=6, default=default_value)
 
 
 class CovidStats(models.Model):
@@ -28,7 +28,7 @@ class CovidStats(models.Model):
 
 
 class CovidCalcs(models.Model):
-    cases_daily_increase = simple_decimal_field(0.00)
-    cases_cumulative_increase = simple_decimal_field(0.00)
-    deaths_daily_increase = simple_decimal_field(0.00)
-    deaths_cumulative_increase = simple_decimal_field(0.00)
+    cases_daily_increase = simple_decimal_field(0.000000)
+    cases_cumulative_increase = simple_decimal_field(0.000000)
+    deaths_daily_increase = simple_decimal_field(0.000000)
+    deaths_cumulative_increase = simple_decimal_field(0.000000)
