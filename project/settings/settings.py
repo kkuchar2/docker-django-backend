@@ -3,9 +3,9 @@ from datetime import timedelta
 from util import envv
 import os
 
-PRODUCTION_ENV = envv('PRODUCTION_ENV')
+PRODUCTION_ENV = envv('PRODUCTION_ENV') == 'True'
 
-DEBUG = PRODUCTION_ENV == 'False'
+DEBUG = True
 
 SECRET_KEY = envv('SECRET_KEY')
 
@@ -147,16 +147,16 @@ REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'apps.accounts.serializers.RegisterSerializer'
 }
 
-CSRF_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
-SESSION_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
-JWT_AUTH_SAMESITE = 'None' if not DEBUG else 'Lax'
+CSRF_COOKIE_SAMESITE = 'None' if PRODUCTION_ENV else 'Lax'
+SESSION_COOKIE_SAMESITE = 'None' if PRODUCTION_ENV  else 'Lax'
+JWT_AUTH_SAMESITE = 'None' if PRODUCTION_ENV else 'Lax'
 
 CSRF_COOKIE_HTTPONLY = False
 SESSION_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_DOMAIN = ".kkucharski.com" if not DEBUG else "0.0.0.0"
-CSRF_COOKIE_DOMAIN = ".kkucharski.com" if not DEBUG else "0.0.0.0"
+CSRF_COOKIE_SECURE = PRODUCTION_ENV
+SESSION_COOKIE_SECURE = PRODUCTION_ENV
+SESSION_COOKIE_DOMAIN = ".kkucharski.com" if PRODUCTION_ENV else "0.0.0.0"
+CSRF_COOKIE_DOMAIN = ".kkucharski.com" if PRODUCTION_ENV else "0.0.0.0"
 
 # dj-rest-auth settins
 REST_SESSION_LOGIN = True
@@ -164,7 +164,7 @@ REST_USE_JWT = True
 JWT_AUTH_COOKIE = "auth-cookie"
 JWT_AUTH_REFRESH_COOKIE = "auth-refresh-cookie"
 JWT_AUTH_COOKIE_USE_CSRF = True
-JWT_AUTH_SECURE = not DEBUG
+JWT_AUTH_SECURE = PRODUCTION_ENV
 
 # What headers should be allowed
 CORS_ALLOW_HEADERS = ['x-csrftoken', 'x-requested-with', 'content-type']
@@ -203,7 +203,7 @@ AVAILABLE_MODELS = [
     'apps.covid.models.CovidCalcs',
 ]
 
-if PRODUCTION_ENV == 'False':
+if not PRODUCTION_ENV:
     from .development import *
 else:
     from .production import *
