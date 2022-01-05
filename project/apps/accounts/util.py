@@ -1,3 +1,6 @@
+from django.http import JsonResponse
+
+
 def parse_field_errors(e):
     response = {
         'status': 'error',
@@ -19,3 +22,35 @@ def parse_field_errors(e):
         response['data']['form'][key] = key_codes
 
     return response
+
+
+def create_form_error(code, message):
+    return JsonResponse({
+        'status': 'error',
+        'data': {
+            'form': {
+                'non_field_errors': [
+                    {
+                        "code": code,
+                        "message": message
+                    }
+                ]
+            }
+        }
+    })
+
+
+def create_form_field_error(code, field_id, message):
+    return JsonResponse({
+        'status': 'error',
+        'data': {
+            'form': {
+                field_id: [
+                    {
+                        "code": code,
+                        "message": message
+                    }
+                ]
+            }
+        }
+    })

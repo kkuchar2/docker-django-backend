@@ -8,12 +8,12 @@ services:
     volumes:
       - ./persistence/mysql:/var/lib/mysql
     ports:
-      - "3307:3306"
+      - ${MYSQL_EXTERNAL_PORT}:${MYSQL_INTERNAL_PORT}
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=dev
-      - MYSQL_PASSWORD=dev
-      - MYSQL_DATABASE=backend_db
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD?Missing MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER?Missing MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD?Missing MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE?Missing MYSQL_DATABASE}
     restart: always
 
   api:
@@ -21,21 +21,21 @@ services:
     volumes:
       - ./project:/backend/project
     build:
-      context: ""
-      dockerfile: Dockerfile
+      context: "../"
+      dockerfile: docker-django-backend/dev.Dockerfile
     environment:
       - PYTHONUNBUFFERED=1
+      - PRODUCTION_ENV=False
       - SECRET_KEY=${SECRET_KEY?Missing SECRET_KEY}
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD?Missing EMAIL_HOST_PASSWORD}
       - EMAIL_HOST_USER=${EMAIL_HOST_USER?Missing EMAIL_HOST_USER}
       - MASTER_EMAIL=${MASTER_EMAIL?Missing MASTER_EMAIL}
       - MASTER_PASSWORD=${MASTER_PASSWORD?Missing MASTER_PASSWORD}
-      - PRODUCTION_ENV=False
       - MYSQL_HOST=db
-      - MYSQL_PORT=3306
-      - MYSQL_USER=dev
-      - MYSQL_PASSWORD=dev
-      - MYSQL_DATABASE=backend_db
+      - MYSQL_EXTERNAL_PORT=${MYSQL_EXTERNAL_PORT?Missing MYSQL_EXTERNAL_PORT}
+      - MYSQL_USER=${MYSQL_USER?Missing MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD?Missing MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE?Missing MYSQL_DATABASE}
   django:
     image: django:latest
     container_name: django_container
@@ -43,7 +43,7 @@ services:
       service: api
     command: ./scripts/fire_up_server_dev.sh
     ports:
-      - "8000:8000"
+      - ${DJANGO_EXTERNAL_PORT}:${DJANGO_INTERNAL_PORT}
     restart: always
     depends_on:
       - db

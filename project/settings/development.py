@@ -1,4 +1,8 @@
+import environ
 import os
+from util import envv
+
+env = environ.Env(DEBUG=(bool, False))
 
 DOMAIN_FRONTEND = 'http://0.0.0.0:3000'
 
@@ -6,6 +10,7 @@ DOMAIN_FRONTEND = 'http://0.0.0.0:3000'
 Host permissions
 """
 ALLOWED_HOSTS = ['0.0.0.0']
+CSRF_TRUSTED_ORIGINS = ['http://0.0.0.0:3000']
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -13,14 +18,18 @@ CORS_ORIGIN_ALLOW_ALL = True
 Database for development is local Docker database
 """
 
+
+# If running locally, use Docker DB external (host) port, otherwise use internal one
+port = envv('MYSQL_EXTERNAL_PORT') if envv('LOCAL_RUN') == 'True' else envv('MYSQL_EXTERNAL_PORT')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'backend_db',
-        'USER': 'dev',
-        'PASSWORD': 'dev',
-        'HOST': '127.0.0.1',
-        'PORT': 3307,
+        'NAME': envv('MYSQL_DATABASE'),
+        'USER': envv('MYSQL_USER'),
+        'PASSWORD': envv('MYSQL_PASSWORD'),
+        'HOST': envv('MYSQL_HOST'),
+        'PORT':  port,
     }
 }
 

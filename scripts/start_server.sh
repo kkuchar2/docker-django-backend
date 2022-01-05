@@ -14,5 +14,5 @@ python manage.py createmasteruser
 #  cd ..
 #  gunicorn -k uvicorn.workers.UvicornWorker project.asgi:application --bind 0.0.0.0:8000 --workers 3
 #else
-python manage.py runserver 0.0.0.0:5000
+python manage.py runserver 0.0.0.0:8000
 #fi

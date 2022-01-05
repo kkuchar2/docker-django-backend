@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from allauth.account.models import EmailConfirmationHMAC, EmailAddress
 from dj_rest_auth.app_settings import LoginSerializer, JWTSerializerWithExpiration, JWTSerializer, TokenSerializer, \
     create_token
 from dj_rest_auth.models import TokenModel
@@ -7,7 +8,6 @@ from dj_rest_auth.utils import jwt_encode
 from django.conf import settings
 from django.contrib.auth import login as django_login
 from django.http import JsonResponse
-from django.middleware.csrf import get_token
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
@@ -97,6 +97,7 @@ class LoginView(GenericAPIView):
                 'user': {
                     'email': self.user.email,
                     'is_staff': self.user.is_staff,
+                    'isVerified': EmailAddress.objects.filter(email=self.user.email, verified=True).exists(),
                     'avatar': avatar_serializer.get_avatar_url(self.request, self.user)
                 },
                 'access_token': self.access_token,

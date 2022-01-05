@@ -22,6 +22,7 @@ class ChangeProfileImageView(GenericAPIView):
                 return JsonResponse({'status': 'error', 'data': 'User does not exist'})
 
             if 'img' in self.request.FILES:
+                user.avatar.delete(save=False)
                 user.avatar = self.request.FILES['img']
                 user.save()
                 s = AvatarSerializer()

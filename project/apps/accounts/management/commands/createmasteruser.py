@@ -14,6 +14,8 @@ class Command(BaseCommand):
         if master_email is None or master_password is None:
             return
 
+        print('Creating master user: {} with password: {}'.format(master_email, master_password))
+
         user_model = get_user_model()
         if not user_model.objects.filter(email=master_email).exists():
             user_model.objects.create_superuser(email=master_email, password=master_password)

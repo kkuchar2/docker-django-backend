@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import (get_user_model, )
 from django.contrib.sites.shortcuts import get_current_site
-from django.forms import ModelForm
 
 from settings import settings
 
@@ -34,7 +33,7 @@ class PasswordResetForm(DefaultPasswordResetForm):
         """
         email = self.cleaned_data["email"]
         email = get_adapter().clean_email(email)
-        self.users = filter_users_by_email(email, is_active=True)
+        self.users = filter_users_by_email(email, is_active=False)
         return self.cleaned_data["email"]
 
     def save(self, request, **kwargs):
@@ -57,7 +56,7 @@ class PasswordResetForm(DefaultPasswordResetForm):
             context = {
                 'current_site': current_site,
                 'user': user,
-                'password_reset_url': settings.URL_FRONT + 'resetPassword/' + user_pk_to_url_str(user) + ":" + temp_key,
+                'password_reset_url': settings.DOMAIN_FRONTEND + '/resetPassword/' + user_pk_to_url_str(user) + ":" + temp_key,
                 'request': request,
             }
             if app_settings.AUTHENTICATION_METHOD != app_settings.AuthenticationMethod.EMAIL:
@@ -66,9 +65,3 @@ class PasswordResetForm(DefaultPasswordResetForm):
                 'account/email/forgot_password/password_reset_email', email, context
             )
         return self.cleaned_data['email']
-
-
-class UserProfileForm(ModelForm):
-    class Meta:
-        model = UserModel
-        fields = ('avatar',)

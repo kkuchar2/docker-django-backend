@@ -9,11 +9,10 @@ from settings.settings import AVAILABLE_MODELS
 class ListModelsView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def post(self, *args, **kwargs):
+    def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
 
             models = django.apps.apps.get_models()
-
             target_models = []
 
             for model in models:

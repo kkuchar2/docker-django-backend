@@ -2,8 +2,6 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 
-from .models import UserProfile
-
 admin.site.unregister(Site)
 
 
@@ -23,4 +21,3 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(UserModel, UserAdmin)
-admin.site.register(UserProfile)

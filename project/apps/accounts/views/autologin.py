@@ -1,15 +1,15 @@
+from allauth.account.models import EmailAddress
 from django.http import JsonResponse
-from rest_framework.generics import GenericAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
 
 from apps.accounts.serializers.avatar_serializer import AvatarSerializer
 
 
-class AutoLoginView(GenericAPIView):
-    permission_classes = (IsAuthenticated,)
-    throttle_scope = 'dj_rest_auth'
+class AutoLoginView(APIView):
+    permission_classes = (AllowAny,)
 
-    def post(self, *args, **kwargs):
+    def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
             s = AvatarSerializer()
 
@@ -19,6 +19,7 @@ class AutoLoginView(GenericAPIView):
                     'user': {
                         'email': self.request.user.email,
                         'is_staff': self.request.user.is_staff,
+                        'isVerified': EmailAddress.objects.filter(email=self.request.user.email, verified=True).exists(),
                         'avatar': s.get_avatar_url(self.request, self.request.user)
                     },
                 }

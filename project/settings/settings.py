@@ -1,18 +1,25 @@
-from datetime import timedelta
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-from util import envv
 import os
+from datetime import timedelta
 
-PRODUCTION_ENV = envv('PRODUCTION_ENV') == 'True'
-
-DEBUG = True
-
-SECRET_KEY = envv('SECRET_KEY')
+import environ
 
 SETTINGS_ROOT = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(SETTINGS_ROOT, '../'))
+PROJECT_PARENT_ROOT = os.path.join(PROJECT_ROOT, '../../')
 
+env = environ.Env(DEBUG=(bool, False))
+
+PRODUCTION_ENV = False
+
+# Load environment variable file when running locally (i.e. Pycharm IDE)
+if env('LOCAL_RUN') == 'True':
+    env_file = os.path.join(PROJECT_PARENT_ROOT, '.env.dev')
+    environ.Env.read_env(env_file)
+else:
+    PRODUCTION_ENV = env('PRODUCTION_ENV') == 'True'
+
+DEBUG = True
+SECRET_KEY = env('SECRET_KEY')
 DEFAULT_SITE_ID = 0
 
 INSTALLED_APPS = [
@@ -40,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     # Custom apps
+    'apps.api',
     'apps.accounts',
     'apps.covid',
     'apps.crud'
@@ -149,7 +157,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 }
 
 CSRF_COOKIE_SAMESITE = 'None' if PRODUCTION_ENV else 'Lax'
-SESSION_COOKIE_SAMESITE = 'None' if PRODUCTION_ENV  else 'Lax'
+SESSION_COOKIE_SAMESITE = 'None' if PRODUCTION_ENV else 'Lax'
 JWT_AUTH_SAMESITE = 'None' if PRODUCTION_ENV else 'Lax'
 
 CSRF_COOKIE_HTTPONLY = False
@@ -183,6 +191,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_LOGOUT_ON_GET = False
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 """
 Sending e-mails to users
@@ -191,44 +200,19 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = envv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = envv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 CORS_ALLOW_CREDENTIALS = True
 APPEND_SLASH = False
 
 AVAILABLE_MODELS = [
     'apps.accounts.models.User',
-    'apps.accounts.models.UserProfile',
     'apps.covid.models.CovidStats',
     'apps.covid.models.CovidCalcs',
 ]
 
-"""
-Sentry logging
-"""
-sentry_sdk.init(
-    dsn=envv('SENTRY_DSN_URL'),
-    integrations=[DjangoIntegration()],
-
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production,
-    traces_sample_rate=1.0,
-
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True,
-
-    # By default the SDK will try to use the SENTRY_RELEASE
-    # environment variable, or infer a git commit
-    # SHA as release, however you may want to set
-    # something more human-readable.
-    # release="myapp@1.0.0",
-)
-
-
-if not PRODUCTION_ENV:
-    from .development import *
-else:
+if PRODUCTION_ENV:
     from .production import *
+else:
+    from .development import *

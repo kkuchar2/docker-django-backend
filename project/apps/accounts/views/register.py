@@ -11,6 +11,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from rest_framework.decorators import authentication_classes
 from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
 
 from apps.accounts.util import parse_field_errors
 
@@ -34,7 +35,7 @@ sensitive_post_parameters_m = method_decorator(
 @authentication_classes([])
 class RegisterView(CreateAPIView):
     serializer_class = RegisterSerializer
-    permission_classes = register_permission_classes()
+    permission_classes = (AllowAny,)
     token_model = TokenModel
     throttle_scope = 'dj_rest_auth'
 
@@ -71,16 +72,13 @@ class RegisterView(CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save(self.request)
-        if allauth_settings.EMAIL_VERIFICATION != \
-                allauth_settings.EmailVerificationMethod.MANDATORY:
+
+        if allauth_settings.EMAIL_VERIFICATION != allauth_settings.EmailVerificationMethod.MANDATORY:
             if getattr(settings, 'REST_USE_JWT', False):
                 self.access_token, self.refresh_token = jwt_encode(user)
             else:
                 create_token(self.token_model, user, serializer)
 
-        complete_signup(
-            self.request._request, user,
-            allauth_settings.EMAIL_VERIFICATION,
-            None,
-        )
+        complete_signup(self.request._request, user, allauth_settings.EMAIL_VERIFICATION, None)
+
         return user

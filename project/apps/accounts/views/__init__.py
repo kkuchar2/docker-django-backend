@@ -8,3 +8,5 @@ from .login import *
 from .logout import *
 from .register import *
 from .change_profile_image import *
+from .change_password import *
+from .change_email import *

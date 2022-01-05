@@ -4,12 +4,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from apps.accounts.serializers import UserSerializer
-from apps.accounts.serializers import UserProfileSerializer
 from apps.covid.serializers import CovidStatsSerializer, CovidCalcsSerializer
 
 serializers = {
     'accounts.User': UserSerializer,
-    'accounts.UserProfile': UserProfileSerializer,
     'covid.CovidStats': CovidStatsSerializer,
     'covid.CovidCalcs': CovidCalcsSerializer,
 }

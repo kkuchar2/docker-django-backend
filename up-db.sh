@@ -6,6 +6,8 @@ CONFIG_FILE=/home/"$USER"/config/.env.dev
 COMPOSE_FILE=docker-compose-db.yml
 
 REQUIRED_VARIABLES=(
+    'MYSQL_EXTERNAL_PORT'
+    'MYSQL_INTERNAL_PORT'
     'MYSQL_ROOT_PASSWORD'
     'MYSQL_USER'
     'MYSQL_PASSWORD'
@@ -24,7 +26,7 @@ validate_configuration_file "${CONFIG_FILE}" "${REQUIRED_VARIABLES}"
 stop_container db_container
 
 echo
-echo "docker-compose --env-file $CONFIG_FILE --file $COMPOSE_FILE up --build"
+echo "docker-compose --env-file $CONFIG_FILE --file $COMPOSE_FILE up --build --detach"
 echo
 
-docker-compose --env-file "$CONFIG_FILE" --file "$COMPOSE_FILE" up --build
+docker-compose --env-file "$CONFIG_FILE" --file "$COMPOSE_FILE" up --build --detach
