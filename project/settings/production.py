@@ -8,8 +8,9 @@ DOMAIN_FRONTEND = 'https://admin.kkucharski.com'
 Host permissions
 """
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = [DOMAIN_FRONTEND, 'https://api.kkucharski.com']
 CORS_ORIGIN_ALLOW_ALL = False
-CORS_ALLOWED_ORIGINS = [DOMAIN_FRONTEND]
+CORS_ALLOWED_ORIGINS = [DOMAIN_FRONTEND, 'https://api.kkucharski.com']
 
 """
 Database for production is DigitalOcean Droplet database: db.kkucharski.com

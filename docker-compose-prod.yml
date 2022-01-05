@@ -24,6 +24,7 @@ services:
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD?Missing EMAIL_HOST_PASSWORD}
       - PYTHONUNBUFFERED=1
       - PRODUCTION_ENV=True
+      - LOCAL_RUN=False
   django:
     image: django:latest
     container_name: django_container

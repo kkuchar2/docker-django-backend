@@ -212,6 +212,8 @@ AVAILABLE_MODELS = [
     'apps.covid.models.CovidCalcs',
 ]
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10*1024*1024
+
 if PRODUCTION_ENV:
     from .production import *
 else:
