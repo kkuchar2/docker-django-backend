@@ -68,6 +68,6 @@ ensure_file_exists() {
 
 unlock_api_persistence() {
   if [[ -d "persistence" ]]; then
-    sudo chown -R 1000:1000 persistence
+    sudo -S chown -R 1000:1000 persistence
   fi
 }
