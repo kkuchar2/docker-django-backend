@@ -2,30 +2,17 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-function stop_container() {
+stop_container() {
     if [ "$(docker ps -q -f name="$1")" ]; then
-        echo "Stopping container $1"
         docker container stop "$1"
     fi
 }
 
-function validate_configuration_file() {
+validate_configuration_file() {
 
   CONFIG_FILE=$1
   REQUIRED_VARIABLES=$2
-
-  echo "-> Required environment variables: "
-
-  for i in "${!REQUIRED_VARIABLES[@]}"; do
-    echo "        ${REQUIRED_VARIABLES[$i]}"
-  done
-
-  echo
-  echo "Validating ${CONFIG_FILE}..."
-  echo
-
   config_is_valid=1
-
   config_keys=()
   config_values=()
 
@@ -56,9 +43,9 @@ function validate_configuration_file() {
     done
 
     if [ $variable_exists == 1 ]; then
-      echo -e "${GREEN}${required_variable} exists${NC}"
+      echo -e "${required_variable} ${GREEN}ok${NC}"
     else
-      echo -e "${RED}${required_variable} missing or empty${NC}"
+      echo -e "${required_variable}${RED} missing/empty${NC}"
       config_is_valid=0
       break
     fi
@@ -72,16 +59,14 @@ function validate_configuration_file() {
   fi
 }
 
-function check_file_exists() {
-  FILE=$1
-
-  if [ ! -f "$FILE" ]; then
-    echo "Error: $FILE not found. Exiting."
-    exit 0
+ensure_file_exists() {
+  if [ ! -f "$1" ]; then
+      echo -e "\n${RED}File $1 does not exist${NC}\n"
+      exit 1
   fi
 }
 
-function unlock_api_persistence() {
+unlock_api_persistence() {
   if [[ -d "persistence" ]]; then
     sudo chown -R 1000:1000 persistence
   fi

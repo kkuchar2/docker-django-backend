@@ -2,9 +2,23 @@ version: '3'
 
 services:
   db:
-    image: mysql:5.7
+    image: mysql
     container_name: db_container
-    command: [mysqld, --max-connections=1000, --wait_timeout=28800]
+    command: [
+        mysqld, 
+        --performance-schema=off,
+        --key_buffer_size=16M,
+        --tmp_table_size=1M,
+        --innodb_buffer_pool_size=1M,
+        --innodb_log_buffer_size=1M,
+        --max_connections=25,
+        --sort_buffer_size=512M,
+        --read_buffer_size=256K,
+        --read_rnd_buffer_size=512K
+        --join_buffer_size=128K,
+        --max-connections=1000, 
+        --wait_timeout=28800
+    ]
     volumes:
       - ./persistence/mysql:/var/lib/mysql
     ports:

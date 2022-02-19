@@ -22,8 +22,7 @@ DATABASES = {
         'USER': envv('MYSQL_USER'),
         'PASSWORD': envv('MYSQL_PASSWORD'),
         'HOST': envv('MYSQL_HOST'),
-        'PORT': envv('MYSQL_PORT'),
-        'OPTIONS': {'ssl': True}
+        'PORT': envv('MYSQL_PORT')
     }
 }
 

@@ -1,11 +1,40 @@
 version: '3'
 
 services:
+  db:
+    image: mysql
+    container_name: db_container
+    command: [
+        mysqld, 
+        --performance-schema=off,
+        --key_buffer_size=16M,
+        --tmp_table_size=1M,
+        --innodb_buffer_pool_size=1M,
+        --innodb_log_buffer_size=1M,
+        --max_connections=25,
+        --sort_buffer_size=512M,
+        --read_buffer_size=256K,
+        --read_rnd_buffer_size=512K
+        --join_buffer_size=128K,
+        --max-connections=1000, 
+        --wait_timeout=28800
+    ]
+    volumes:
+      - ./persistence/mysql:/var/lib/mysql
+    ports:
+      - ${MYSQL_EXTERNAL_PORT}:${MYSQL_INTERNAL_PORT}
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD?Missing MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER?Missing MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD?Missing MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE?Missing MYSQL_DATABASE}
+    restart: always
   api:
     container_name: api_container
     build:
       context: "../"
       dockerfile: docker-django-backend/prod.Dockerfile
+      network: host
       args:
           GS_CREDENTIALS_JSON: ${GS_CREDENTIALS_JSON}
     environment:
