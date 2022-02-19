@@ -21,4 +21,4 @@ jobs:
           script: |
             cd docker-django-backend
             git pull origin main
-            ./up-prod.sh
+            ./up-service.sh --env prod
