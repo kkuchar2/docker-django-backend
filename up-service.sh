@@ -128,14 +128,14 @@ ensure_file_exists $CONFIG_FILE
 # Check if all required enviroment variables are set in config file
 validate_configuration_file "${CONFIG_FILE}" "${REQUIRED_VARIABLES}"
 
-# Unslock persistence directory content created by Docker
-unlock_api_persistence
-
 # Stop current running service container
 stop_container django_container
 
+# Copy .dockerignore to context directory (one up)
+cp .dockerignore ../
+
 # Stop current running database container
-stop_container db_container
+#stop_container db_container
 
 dash_line
 
