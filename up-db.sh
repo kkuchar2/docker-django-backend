@@ -4,7 +4,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 source "${DIR}/scripts/up-common.sh"
 
-CONFIG_FILE=/home/"$USER"/config/.env.db.prod
+CONFIG_FILE=/home/"$USER"/config/.env.dev
 COMPOSE_FILE=docker-compose-db.yml
 
 REQUIRED_VARIABLES=(
@@ -28,7 +28,7 @@ validate_configuration_file "${CONFIG_FILE}" "${REQUIRED_VARIABLES}"
 stop_container db_container
 
 echo
-echo "docker-compose --env-file $CONFIG_FILE --file $COMPOSE_FILE up --build"
+echo "docker-compose --env-file $CONFIG_FILE --file $COMPOSE_FILE up --build --detach"
 echo
 
 docker-compose --env-file "$CONFIG_FILE" --file "$COMPOSE_FILE" up --build

@@ -20,7 +20,7 @@ else:
 
 DEBUG = True
 SECRET_KEY = env('SECRET_KEY')
-DEFAULT_SITE_ID = 0
+SITE_ID = 1
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'storages',
 
@@ -36,6 +35,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
+    'dj_rest_auth.registration',
     'corsheaders',
 
     # For social login
@@ -50,11 +50,11 @@ INSTALLED_APPS = [
     'apps.api',
     'apps.accounts',
     'apps.covid',
-    'apps.crud'
+    'apps.crud',
+    'apps.config'
 ]
 
 MIDDLEWARE = [
-    'apps.accounts.middleware.dynamic_site_domain_middleware.DynamicSiteDomainMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -144,9 +144,9 @@ ACCOUNT_ADAPTER = 'apps.accounts.adapter.AccountAdapter'
 REST_AUTH_SERIALIZERS = {
     'LOGIN_SERIALIZER': 'apps.accounts.serializers.LoginSerializer',
     'TOKEN_SERIALIZER': 'dj_rest_auth.serializers.TokenSerializer',
+    'USER_DETAILS_SERIALIZER': 'apps.accounts.serializers.CustomUserDetailSerializer',
     'JWT_SERIALIZER': 'dj_rest_auth.serializers.JWTSerializer',
     'JWT_TOKEN_CLAIMS_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenObtainPairSerializer',
-    'USER_DETAILS_SERIALIZER': 'dj_rest_auth.serializers.UserDetailsSerializer',
     'PASSWORD_RESET_SERIALIZER': 'apps.accounts.serializers.ForgotPasswordSerializer',
     'PASSWORD_RESET_CONFIRM_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetConfirmSerializer',
     'PASSWORD_CHANGE_SERIALIZER': 'dj_rest_auth.serializers.PasswordChangeSerializer'
@@ -157,18 +157,14 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 }
 
 CSRF_COOKIE_SAMESITE = 'None' if PRODUCTION_ENV else 'Lax'
-SESSION_COOKIE_SAMESITE = 'None' if PRODUCTION_ENV else 'Lax'
 JWT_AUTH_SAMESITE = 'None' if PRODUCTION_ENV else 'Lax'
 
-CSRF_COOKIE_HTTPONLY = False
-SESSION_COOKIE_HTTPONLY = False
+CSRF_COOKIE_HTTPONLY = False  # Should it be true?
 CSRF_COOKIE_SECURE = PRODUCTION_ENV
-SESSION_COOKIE_SECURE = PRODUCTION_ENV
-SESSION_COOKIE_DOMAIN = ".kkucharski.com" if PRODUCTION_ENV else "0.0.0.0"
 CSRF_COOKIE_DOMAIN = ".kkucharski.com" if PRODUCTION_ENV else "0.0.0.0"
 
-# dj-rest-auth settins
-REST_SESSION_LOGIN = True
+# dj-rest-auth settings
+REST_SESSION_LOGIN = False
 REST_USE_JWT = True
 JWT_AUTH_COOKIE = "auth-cookie"
 JWT_AUTH_REFRESH_COOKIE = "auth-refresh-cookie"
@@ -179,9 +175,10 @@ JWT_AUTH_SECURE = PRODUCTION_ENV
 CORS_ALLOW_HEADERS = ['x-csrftoken', 'x-requested-with', 'content-type']
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
-    'ROTATE_REFRESH_TOKENS': True
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True
 }
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
@@ -208,11 +205,12 @@ APPEND_SLASH = False
 
 AVAILABLE_MODELS = [
     'apps.accounts.models.User',
+    'apps.accounts.models.UserProfile',
     'apps.covid.models.CovidStats',
     'apps.covid.models.CovidCalcs',
 ]
 
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10*1024*1024
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 
 if PRODUCTION_ENV:
     from .production import *

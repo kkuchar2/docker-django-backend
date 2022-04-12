@@ -1,13 +1,15 @@
 from django.apps import apps
-from django.http import JsonResponse
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.accounts.serializers import UserSerializer
+from apps.accounts.serializers import UserSimpleSerializer, UserProfileSerializer
 from apps.covid.serializers import CovidStatsSerializer, CovidCalcsSerializer
 
 serializers = {
-    'accounts.User': UserSerializer,
+    'accounts.User': UserSimpleSerializer,
+    'accounts.UserProfile': UserProfileSerializer,
     'covid.CovidStats': CovidStatsSerializer,
     'covid.CovidCalcs': CovidCalcsSerializer,
 }
@@ -56,7 +58,7 @@ class GetModelView(APIView):
     def process(self, model, serializer, obj):
         sr = serializer(obj, many=True)
         header_fields = self.create_headers_dict(model, serializer)
-        return JsonResponse({'status': 'success', 'data': self.build_response(header_fields, sr)})
+        return Response(self.build_response(header_fields, sr), status.HTTP_200_OK)
 
     def process_range_query(self, model, serializer, start_idx, end_idx):
         return self.process(model, serializer, model.objects.filter(pk__lte=end_idx, pk__gte=start_idx))
@@ -75,7 +77,7 @@ class GetModelView(APIView):
             data = self.request.data
 
             if 'model' not in data or 'package' not in data:
-                return JsonResponse({'status': 'error', 'data': 'Missing `model` or `package` value in request'})
+                return Response('Missing `model` or `package` value in request', status.HTTP_400_BAD_REQUEST)
 
             app_model, serializer = self.get_model_and_serializer(data)
 
@@ -90,4 +92,4 @@ class GetModelView(APIView):
 
             return self.process_all_data_query(app_model, serializer)
 
-        return JsonResponse({'status': 'error', 'data': 'Not authenticated'})
+        return Response(status=status.HTTP_401_UNAUTHORIZED)

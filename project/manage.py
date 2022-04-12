@@ -8,8 +8,10 @@ from django.core.management import execute_from_command_line
 from django.db.utils import OperationalError
 from django.db import connection
 
+
 def exec_command(args):
     execute_from_command_line(["manage_py", *args])
+
 
 if __name__ == '__main__':
     os.environ["DJANGO_SETTINGS_MODULE"] = "settings.settings"
@@ -28,9 +30,8 @@ if __name__ == '__main__':
 
     print("Database available")
 
-    exec_command(["makemigrations", "--no-input"])
-    exec_command(["migrate", "--no-input"])
+    exec_command(["migrate"])
+    exec_command(["updatedefaultsite"])
     exec_command(["collectstatic", "--no-input"])
     exec_command(["createmasteruser"])
     exec_command(["runserver", "0.0.0.0:8000"])
-

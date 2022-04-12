@@ -18,7 +18,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 Database for development is local Docker database
 """
 
-
 # If running locally, use Docker DB external (host) port, otherwise use internal one
 port = envv('MYSQL_EXTERNAL_PORT') if envv('LOCAL_RUN') == 'True' else envv('MYSQL_EXTERNAL_PORT')
 

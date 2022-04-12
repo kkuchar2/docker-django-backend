@@ -1,12 +1,10 @@
-from django.http import JsonResponse
+from rest_framework import status
+from rest_framework.response import Response
 
 
 def parse_field_errors(e):
     response = {
-        'status': 'error',
-        'data': {
-            'form': {}  # The context for response errors is 'form'
-        }
+        'form': {}
     }
 
     for key in e.detail:
@@ -19,38 +17,32 @@ def parse_field_errors(e):
                 "message": str(key_errors[i])
             })
 
-        response['data']['form'][key] = key_codes
+        response['form'][key] = key_codes
 
     return response
 
 
 def create_form_error(code, message):
-    return JsonResponse({
-        'status': 'error',
-        'data': {
-            'form': {
-                'non_field_errors': [
-                    {
-                        "code": code,
-                        "message": message
-                    }
-                ]
-            }
+    return Response({
+        'form': {
+            'non_field_errors': [
+                {
+                    "code": code,
+                    "message": message
+                }
+            ]
         }
-    })
+    }, status=status.HTTP_400_BAD_REQUEST)
 
 
 def create_form_field_error(code, field_id, message):
-    return JsonResponse({
-        'status': 'error',
-        'data': {
-            'form': {
-                field_id: [
-                    {
-                        "code": code,
-                        "message": message
-                    }
-                ]
-            }
+    return Response({
+        'form': {
+            field_id: [
+                {
+                    "code": code,
+                    "message": message
+                }
+            ]
         }
-    })
+    }, status=status.HTTP_400_BAD_REQUEST)

@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.http import JsonResponse
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from allauth.account.models import EmailAddress
 from apps.accounts.serializers import EmailChangeSerializer
 from apps.accounts.util import parse_field_errors, create_form_field_error
+from rest_framework.response import Response
 
 UserModel = get_user_model()
 
@@ -13,18 +14,15 @@ UserModel = get_user_model()
 class ChangeEmailView(GenericAPIView):
     serializer_class = EmailChangeSerializer
     permission_classes = (IsAuthenticated,)
-    throttle_scope = 'dj_rest_auth'
+    throttle_scope = 'api'
 
     def post(self, request, *args, **kwargs):
-
-        # Get serializer
         serializer = self.get_serializer(data=request.data)
 
-        # Validate request
         try:
             serializer.is_valid(raise_exception=True)
         except serializers.ValidationError as e:
-            return JsonResponse(parse_field_errors(e))
+            return Response(parse_field_errors(e), status=status.HTTP_400_BAD_REQUEST)
 
         current_email = request.data['current_email']
         password = request.data['current_password']

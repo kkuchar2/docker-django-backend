@@ -1,42 +1,29 @@
 from django.contrib.auth import get_user_model
-from django.http import JsonResponse
+from rest_framework import serializers
+from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from apps.accounts.serializers.avatar_serializer import AvatarSerializer
+from apps.accounts.serializers import ChangeProfileImageSerializer
+from apps.accounts.util import parse_field_errors
 
 user_model = get_user_model()
 
 
 class ChangeProfileImageView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
-    throttle_scope = 'dj_rest_auth'
+    throttle_scope = 'api'
+    serializer_class = ChangeProfileImageSerializer
 
-    def post(self, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
 
-        if self.request.user.is_authenticated:
+        try:
+            serializer.is_valid(raise_exception=True)
+        except serializers.ValidationError as e:
+            return Response(parse_field_errors(e), status=status.HTTP_400_BAD_REQUEST)
 
-            try:
-                user = user_model.objects.get(email=self.request.user.email)
-            except Exception as e:
-                return JsonResponse({'status': 'error', 'data': 'User does not exist'})
+        serializer.save(request)
 
-            if 'img' in self.request.FILES:
-                user.avatar.delete(save=False)
-                user.avatar = self.request.FILES['img']
-                user.save()
-                s = AvatarSerializer()
-                return JsonResponse({
-                    'status': 'success',
-                    'data': {
-                        'avatar': s.get_avatar_url(self.request, user)
-                    }
-
-                })
-
-            return JsonResponse({
-                'status': 'error',
-                'data': 'No image sent in request'
-            })
-        else:
-            return JsonResponse({'status': 'error', 'data': 'Not authenticated'})
+        return Response(serializer.data, status=status.HTTP_200_OK)

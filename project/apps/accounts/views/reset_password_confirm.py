@@ -17,7 +17,7 @@ that has change password generated link from email to change their password
 class ResetPasswordConfirmView(GenericAPIView):
     serializer_class = PasswordResetConfirmSerializer
     permission_classes = (AllowAny,)
-    throttle_scope = 'dj_rest_auth'
+    throttle_scope = 'api'
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

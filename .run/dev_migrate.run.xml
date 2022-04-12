@@ -1,9 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="dev_migrate" type="PythonConfigurationType" factoryName="Python" singleton="false">
+  <configuration default="false" name="start" type="PythonConfigurationType" factoryName="Python" singleton="false">
     <module name="docker-django-backend" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
+      <env name="PYTHONUNBUFFERED" value="1" />
       <env name="LOCAL_RUN" value="True" />
     </envs>
     <option name="SDK_HOME" value="" />
@@ -13,7 +14,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/project/manage.py" />
-    <option name="PARAMETERS" value="migrate" />
+    <option name="PARAMETERS" value="" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />

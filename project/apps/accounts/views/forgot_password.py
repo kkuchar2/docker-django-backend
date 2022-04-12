@@ -12,7 +12,7 @@ from apps.accounts.util import parse_field_errors
 class ForgotPasswordView(GenericAPIView):
     serializer_class = ForgotPasswordSerializer
     permission_classes = (AllowAny,)
-    throttle_scope = 'dj_rest_auth'
+    throttle_scope = 'api'
 
     def post(self, request, *args, **kwargs):
         # TODO: Fix issue, when account is inactive and we try to reset password through forgot password link
